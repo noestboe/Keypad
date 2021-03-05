@@ -21,7 +21,7 @@ class FSM:
 
     def make_rules(self):
         # Rules to login
-        self.add_rule(Rule('S-INIT', 'S-READ', all_signals, KPC.init_password))
+        self.add_rule(Rule('S-INIT', 'S-READ', all_signals, KPC.reset_passcode_entry))
         self.add_rule(Rule('S-READ', 'S-READ', all_digits, KPC.append_digit))
         self.add_rule(Rule('S-READ', 'S-VERIFY', '*', KPC.verify_login))
         self.add_rule(Rule('S-READ', 'S-INIT', all_signals, KPC.reset_agent))
@@ -38,7 +38,6 @@ class FSM:
         self.add_rule(Rule('S-READ-3', 'S-ACTIVE', all_signals, KPC.stop_new_password))
 
         # Rules to manipulate lights
-
 
     def add_rule(self, rule):
         """ Add new rules to the end of the FSM 's rule list """

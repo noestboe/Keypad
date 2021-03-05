@@ -17,10 +17,6 @@ class KPC:
         """ Return the override_signal, if it is non-blank; otherwise query the keypad
         for the next pressed key """
 
-    def verify_login(self):
-        """ Check that the password just entered via the keypad matches that in the password file.
-        Store the result (Y or N) in the override_signal. Also, this should call the LED Board
-        to initiate the appropriate lighting pattern for login success or failure. """
 
     def validate_passcode_change(self):
         """" Check that the new password is legal. If so, write the new password in the password file.
@@ -40,3 +36,25 @@ class KPC:
 
     def exit_action(self):
         """ Call the LED Board to initiate the 'power down' lighting sequence """
+
+
+    # Actions that will be performed depending of the FSM's rules
+
+    def init_password(self):
+        """ Will begin the new password """
+
+    def append_digit(self):
+        """ will append the digit """
+
+    def verify_login(self):
+        """ Check that the password just entered via the keypad matches that in the password file.
+        Store the result (Y or N) in the override_signal. Also, this should call the LED Board
+        to initiate the appropriate lighting pattern for login success or failure. """
+
+    def reset_agent(self):
+        """ Reset the password """
+
+    def activated(self):
+        """ Let the user know that they are activated """
+        print("welcome")
+

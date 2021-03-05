@@ -29,12 +29,12 @@ class FSM:
         self.add_rule(Rule('S-VERIFY', 'S-INIT', all_signals, KPC.reset_agent))
 
         # Rules to change password
-        self.add_rule(Rule('S-ACTIVE', 'S-READ-2', '*', KPC.new_password))
+        self.add_rule(Rule('S-ACTIVE', 'S-READ-2', '*', KPC.init_password))
         self.add_rule(Rule('S-READ-2', 'S-READ-2', all_digits, KPC.append_digit))
         self.add_rule(Rule('S-READ-2', 'S-READ-3', '*', KPC.cache_password))
         self.add_rule(Rule('S-READ-2', 'S-ACTIVE', all_signals, KPC.stop_new_password))
         self.add_rule(Rule('S-READ-3', 'S-READ-3', all_digits, KPC.append_digit))
-        self.add_rule(Rule('S-READ-3', 'S-ACTIVE', '*', KPC.reset_passcode_entry))
+        self.add_rule(Rule('S-READ-3', 'S-ACTIVE', '*', KPC.validate_passcode_change))
         self.add_rule(Rule('S-READ-3', 'S-ACTIVE', all_signals, KPC.stop_new_password))
 
         # Rules to manipulate lights

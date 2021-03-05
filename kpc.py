@@ -69,11 +69,6 @@ class KPC:
         """ Let the user know that they are activated """
         print("activated")
 
-    def new_password(self):
-        """ Initialize the new password """
-        print("Start to input the password")
-        self.input_password = ""
-
     def cache_password(self):
         """ this is called when the user is done with the input of the password for the
         for the first time"""
@@ -88,7 +83,6 @@ class KPC:
     def reset_passcode_entry(self):
         """ Clear the passcode-buffer and initiate a 'power up' lighting sequence on the LED
          Board. """
-
 
     def validate_passcode_change(self):
         """" Check that the new password is legal. If so, write the new password in the password file.

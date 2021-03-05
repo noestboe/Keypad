@@ -1,7 +1,14 @@
 """ Module for finite state machine """
 from inspect import isfunction
-from rules import RULES
 from kpc import KPC
+
+
+class Rule:
+    def __init__(self, state1, state2, signal, action):
+        self.state1 = state1
+        self.state2 = state2
+        self.signal = signal
+        self.action = action
 
 
 class FSM:
@@ -12,8 +19,17 @@ class FSM:
         self.agent = None
         self.signal = None
 
+    def make_rules(self):
+        # Rules to login
+        self.add_rule(Rule('S-INIT', 'S-READ', all_signals, KPC.init_password))
+        self.add_rule(Rule('S-READ', 'S-READ', all_digits, KPC.append_digit))
+        self.add_rule(Rule('S-READ', 'S-VERIFY', '*', KPC.verify_login))
+        self.add_rule(Rule('S-READ', 'S-INIT', all_signals, KPC.reset_agent))
+        self.add_rule(Rule('S-VERIFY', 'S-ACTIVE', 'Y', KPC.activated))
+        self.add_rule(Rule('S-VERIFY', 'S-INIT', all_signals, KPC.reset_agent))
+
     def add_rule(self, rule):
-        """ Add a new rule to the end of the FSM 's rule list """
+        """ Add new rules to the end of the FSM 's rule list """
         self.rules.append(rule)
 
     def get_next_signal(self):
@@ -32,28 +48,23 @@ class FSM:
     def match(self, rule):
         """ Check whether the rule condition is fulfilled """
         is_match = True
-        rule_signal = rule[2]
-        if isfunction(rule_signal):
-            is_match &= rule_signal(self.signal)
+        if isfunction(rule.signal):
+            is_match &= rule.signal(self.signal)
         else:
-            is_match &= rule_signal == self.signal
+            is_match &= rule.signal == self.signal
 
-        rule_state = rule[0]
-        is_match &= self.state == rule_state
+        is_match &= self.state == rule.state1
         return is_match
 
     def fire(self, rule):
         """ use the consequent of a rule to A) set the next state of the FSM, and B) call the
         appropriate agent action method. """
-        self.state = rule[1]
-        rule_action = rule[3]
-        rule_action(self.agent, self.signal)
-
+        self.state = rule.state2
+        rule.action(self.agent, self.signal)
 
     def loop(self):
 
-        for rule in RULES:
-            self.add_rule(rule)
+        self.make_rules()
 
         self.agent = KPC()
         self.state = 'S-INIT'
@@ -66,16 +77,11 @@ class FSM:
                 pass
 
 
-def test_match():
-    fsm1 = FSM()
-    fsm1.state = 'S-READ'
-    fsm1.signal = '4'
-    for k in RULES:
-        fsm1.add_rule(k)
-
-    for j in fsm1.rules:
-        print(fsm1.match(j))
+def all_signals(signal):
+    """ Check if it si a signal"""
+    return True
 
 
-if __name__ == '__main__':
-    test_match()
+def all_digits(signal):
+    """ Check if it is digits """
+    return 48 <= ord(signal) <= 57

@@ -38,7 +38,8 @@ class KPC:
     def exit_action(self):
         """ Call the LED Board to initiate the 'power down' lighting sequence """
 
-    # Actions that will be performed depending of the FSM's rules
+    # Actions that will be performed depending on the state which
+    # is determined by the FSM's rules
 
     # A1
     def reset_passcode_entry(self, *_):

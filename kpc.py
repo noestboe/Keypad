@@ -1,5 +1,6 @@
 """ Module for the keypad controller """
-
+import keypad
+import led_board
 
 class KPC:
     """ Class for the keypad controller. It will need following variables:
@@ -10,8 +11,8 @@ class KPC:
     """
 
     def __init__(self):
-        self.keypad = None
-        self.led_board = None
+        self.keypad = keypad.Keypad()
+        self.led_board = led_board.Led_board()
         self.path = "password.txt"
         self.override_signal = None
         self.input_password = None

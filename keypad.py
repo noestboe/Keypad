@@ -1,6 +1,6 @@
 """ Module for keypad """
-import sys
 import time
+import sys
 from GPIOSimulator_v5 import *
 GPIO = GPIOSimulator()
 
@@ -36,7 +36,7 @@ class Keypad:
 
     def do_polling(self):
         """ Use nested loops to determine the key currently being pressed on the keypad """
-        time.sleep(0.1)  # Wait 0.2 seconds before executing the method
+        # time.sleep(0.1)  # Wait 0.2 seconds before executing the method
         for rp in self.rows:
             GPIO.output(rp, GPIO.HIGH)
             for cp in self.cols:
@@ -49,6 +49,7 @@ class Keypad:
     def get_next_signal(self):
         """ This is the main interface between the agent and the keypad. It should initiate
         repeated calls to do_polling until a key press is detected """
+        time.sleep(0.25)
         polling_result = self.do_polling()
         while polling_result is None:
             polling_result = self.do_polling()
@@ -63,4 +64,4 @@ if __name__ == '__main__':
             print('SIGNAL: ', keypad.get_next_signal())
         except KeyboardInterrupt:
             GPIO.cleanup()
-
+            sys.exit()

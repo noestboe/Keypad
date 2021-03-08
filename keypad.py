@@ -3,6 +3,7 @@ import time
 from GPIOSimulator_v5 import *
 GPIO = GPIOSimulator()
 
+
 class Keypad:
     """ Class for the keypad """
 

@@ -11,6 +11,7 @@ class Keypad:
     def __init__(self):
         self.rows = keypad_row_pins
         self.cols = keypad_col_pins
+
         self.key_symbols = {
             (self.rows[0], self.cols[0]): '1',
             (self.rows[0], self.cols[1]): '2',
@@ -21,8 +22,8 @@ class Keypad:
             (self.rows[2], self.cols[0]): '7',
             (self.rows[2], self.cols[1]): '8',
             (self.rows[2], self.cols[2]): '9',
-            (self.rows[3], self.cols[0]): '0',
-            (self.rows[3], self.cols[1]): '*',
+            (self.rows[3], self.cols[0]): '*',
+            (self.rows[3], self.cols[1]): '0',
             (self.rows[3], self.cols[2]): '#'
         }
 
@@ -35,12 +36,12 @@ class Keypad:
 
     def do_polling(self):
         """ Use nested loops to determine the key currently being pressed on the keypad """
-        time.sleep(0.2)
+        time.sleep(0.1)  # Wait 0.2 seconds before executing the method
         for rp in self.rows:
             GPIO.output(rp, GPIO.HIGH)
             for cp in self.cols:
-                input_sig = GPIO.input(cp)
-                if input_sig == GPIO.HIGH:
+                if GPIO.input(cp) == GPIO.HIGH:
+                    GPIO.output(rp, GPIO.OUT)
                     return rp, cp
             GPIO.output(rp, GPIO.LOW)
         return None
@@ -59,9 +60,7 @@ if __name__ == '__main__':
     keypad.setup()
     while True:
         try:
-            print(keypad.get_next_signal())
+            print('SIGNAL: ', keypad.get_next_signal())
         except KeyboardInterrupt:
             GPIO.cleanup()
-            sys.exit()
-        GPIO.cleanup()
 

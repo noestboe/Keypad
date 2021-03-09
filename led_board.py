@@ -7,54 +7,58 @@ GPIO = GPIOSimulator()
 class Led_board:
     """ Class for the led board """
 
-    def light_nth_led(self, n):
-        """ Takes in argument n, lights up nth LED """
+    def light_nth_led(self, n, k):
+        """ Takes in argument n, k, lights up nth LED for k seconds """
 
-        if n == 0:
-            GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
-            GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
-            GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.IN)
+        start_time = time.time()
 
-            GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.HIGH)
-            GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.LOW)
-        elif n == 1:
-            GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
-            GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
-            GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.IN)
+        while time.time() - start_time < k:
 
-            GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.LOW)
-            GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.HIGH)
-        elif n == 2:
-            GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.IN)
-            GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
-            GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
+            if n == 0:
+                GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
+                GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
+                GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.IN)
 
-            GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.HIGH)
-            GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.LOW)
-        elif n == 3:
-            GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.IN)
-            GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
-            GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
+                GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.HIGH)
+                GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.LOW)
+            elif n == 1:
+                GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
+                GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
+                GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.IN)
 
-            GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.LOW)
-            GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.HIGH)
-        elif n == 4:
-            GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
-            GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.IN)
-            GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
+                GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.LOW)
+                GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.HIGH)
+            elif n == 2:
+                GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.IN)
+                GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
+                GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
 
-            GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.HIGH)
-            GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.LOW)
-        elif n == 5:
-            GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
-            GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.IN)
-            GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
+                GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.HIGH)
+                GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.LOW)
+            elif n == 3:
+                GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.IN)
+                GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
+                GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
 
-            GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.LOW)
-            GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.HIGH)
-        else:
-            raise Exception
-        GPIO.show_leds_states()
+                GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.LOW)
+                GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.HIGH)
+            elif n == 4:
+                GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
+                GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.IN)
+                GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
+
+                GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.HIGH)
+                GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.LOW)
+            elif n == 5:
+                GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
+                GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.IN)
+                GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
+
+                GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.LOW)
+                GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.HIGH)
+            else:
+                raise Exception
+            GPIO.show_leds_states()
 
         self.reset_led()
 

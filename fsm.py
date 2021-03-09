@@ -41,7 +41,7 @@ class FSM:
         self.add_rule(Rule('S-READ-3', 'S-ACTIVE', all_signals, KPC.stop_new_password))
 
         # Rules to manipulate lights
-        self.add_rule(Rule(active, 'S-LED', led_symbols, KPC.select_led))
+        self.add_rule(Rule('S-ACTIVE', 'S-LED', led_symbols, KPC.select_led))
         self.add_rule(Rule('S-LED', 'S-TIME', '*', KPC.reset_duration))
         self.add_rule(Rule('S-TIME', 'S-TIME', all_digits, KPC.append_duration_digit))
         self.add_rule(Rule('S-TIME', 'S-ACTIVE', '*', KPC.light_one_led))
@@ -76,7 +76,10 @@ class FSM:
         else:
             is_match &= rule.signal == self.signal
 
-        is_match &= self.state == rule.state1
+        if isfunction(rule.state1):
+            is_match = rule.state1(self.state)
+        else:
+            is_match &= self.state == rule.state1
         return is_match
 
     def fire(self, rule):
@@ -106,13 +109,13 @@ def all_signals(*_):
     return True
 
 
-def led_symbols(*_):
-    return True
+def led_symbols(signal):
+    print("led symbols")
+    return 0 < int(signal) < 5
 
 
 def all_digits(signal):
     """ Check if it is digits """
-    print(signal)
     return 48 <= ord(signal) <= 57
 
 

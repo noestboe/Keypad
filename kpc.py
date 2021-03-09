@@ -18,6 +18,8 @@ class KPC:
         self.input_password = None
         self.actual_password = None
         self.cache = None
+        self.duration = 0.2
+        self.led_pin = None
 
     def read_password_from_file(self):
         """ Gets the password that is stored in a file """
@@ -55,6 +57,7 @@ class KPC:
         self.led_board.flash_all_leds(0.2)
 
     def change_passcode_entry(self, *_):
+        print("signal", self.get_next_signal())
         self.input_password = ""
         print("change passcode entry")
 
@@ -123,21 +126,26 @@ class KPC:
     # Actions for the LED
 
     # A9
-    def select_led(self):
+    def select_led(self, led_pin):
         """ Will select the led """
+        self.led_pin = led_pin
 
     # A10
-    def reset_duration(self):
+    def reset_duration(self, *_):
         """ Rest the duration time """
+        self.duration = ""
 
     # A11
-    def append_duration_digit(self):
+    def append_duration_digit(self, digit):
         """ Will append the duration digit to the time """
+        self.duration += digit
 
     # 12
-    def light_one_led(self):
-        """" Using values stored in the Lid and Ldur slots, call the LED Board and request that LED
-        # Lid be turned on for Ldur seconds """
+    def light_one_led(self, *_):
+        """ Using values stored in the Lid and Ldur slots,
+        call the LED Board and request that LED
+        Lid be turned on for Ldur seconds """
+        self.led_board.light_nth_led(self.led_pin, int(self.duration))
 
     # Actions for logout
 

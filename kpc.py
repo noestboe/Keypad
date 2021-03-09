@@ -1,6 +1,6 @@
 """ Module for the keypad controller """
-import keypad
-import led_board
+from led_board import Led_board
+from keypad import Keypad
 
 class KPC:
     """ Class for the keypad controller. It will need following variables:
@@ -11,8 +11,8 @@ class KPC:
     """
 
     def __init__(self):
-        self.keypad = keypad.Keypad()
-        self.led_board = led_board.Led_board()
+        self.keypad = None
+        self.led_board = None
         self.path = "password.txt"
         self.override_signal = None
         self.input_password = None
@@ -29,6 +29,11 @@ class KPC:
     def get_next_signal(self):
         """ Return the override_signal, if it is non-blank; otherwise query the keypad
         for the next pressed key """
+        if self.override_signal is not None:
+            result = self.override_signal
+            self.override_signal
+            return result
+        return self.keypad.get_next_signal()
 
     def flash_leds(self):
         """ Call the LED Board and request the flashing of all LEDs """
@@ -99,20 +104,34 @@ class KPC:
         digits 0-9. As in verify_login, this should use the LED Board to signal success or failure in
         changing the password. """
 
-
     # Actions for the LED
+
+    # A9
     def select_led(self):
         """ Will select the led """
 
+    # A10
     def reset_duration(self):
         """ Rest the duration time """
 
+    # A11
     def append_duration_digit(self):
         """ Will append the duration digit to the time """
 
+    # 12
     def light_one_led(self):
         """" Using values stored in the Lid and Ldur slots, call the LED Board and request that LED
         # Lid be turned on for Ldur seconds """
+
+    # Actions for logout
+
+    # A13
+    def begin_logout(self):
+        """" Will begin the logout """
+
+    # A14
+    def confirm_logout(self):
+        """" Confirms the logout """
 
 
 def test_read():
@@ -122,4 +141,8 @@ def test_read():
 
 
 if __name__ == '__main__':
-    test_read()
+    # test_read()
+    kpc1 = KPC()
+    kpc1.keypad = Keypad()
+    kpc1.keypad.setup()
+    print(kpc1.get_next_signal())

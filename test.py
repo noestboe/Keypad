@@ -1,7 +1,7 @@
 """ Module for tests """
 from fsm import FSM
 from kpc import KPC
-
+from keypad import Keypad
 
 def test_run():
     fsm3 = FSM()
@@ -31,9 +31,16 @@ def test_match():
         print(fsm1.match(j))
 
 
+def test_keypad():
+    keypad = Keypad()
+    keypad.setup()
+    keypad.get_next_signal()
+
 if __name__ == '__main__':
     """ Testing method """
+    # print("hei")
     # test_match()
     # test_fire()
     # test_run()
-    # test change
+    test_keypad()
+

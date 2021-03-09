@@ -1,9 +1,12 @@
 """ Module for finite state machine """
 from inspect import isfunction
 from kpc import KPC
+from keypad import Keypad
 
 
 class Rule:
+    """ A rule will have the current state1, the next state state2, the signal and
+    the action that will be performed when changing state """
     def __init__(self, state1, state2, signal, action):
         self.state1 = state1
         self.state2 = state2
@@ -29,7 +32,7 @@ class FSM:
         self.add_rule(Rule('S-VERIFY', 'S-INIT', all_signals, KPC.reset_agent))
 
         # Rules to change password
-        self.add_rule(Rule('S-ACTIVE', 'S-READ-2', '*', KPC.init_password))
+        self.add_rule(Rule(active, 'S-READ-2', '*', KPC.reset_passcode_entry))
         self.add_rule(Rule('S-READ-2', 'S-READ-2', all_digits, KPC.append_digit))
         self.add_rule(Rule('S-READ-2', 'S-READ-3', '*', KPC.cache_password))
         self.add_rule(Rule('S-READ-2', 'S-ACTIVE', all_signals, KPC.stop_new_password))
@@ -38,6 +41,15 @@ class FSM:
         self.add_rule(Rule('S-READ-3', 'S-ACTIVE', all_signals, KPC.stop_new_password))
 
         # Rules to manipulate lights
+        self.add_rule(Rule(active, 'S-LED', led_symbols, KPC.select_led))
+        self.add_rule(Rule('S-LED', 'S-TIME', '*', KPC.reset_duration))
+        self.add_rule(Rule('S-TIME', 'S-TIME', all_digits, KPC.append_duration_digit))
+        self.add_rule(Rule('S-TIME', 'S-ACTIVE', '*', KPC.light_one_led))
+
+        # Rules to logout
+        self.add_rule(Rule('S-ACTIVE', 'S-ACTIVE-2', '#', KPC.begin_logout))
+        self.add_rule(Rule('S-ACTIVE-2', 'S-FINISH', '#', KPC.confirm_logout))
+        self.add_rule(Rule('S-FINISH', 'S-READ', all_signals, KPC.reset_passcode_entry))
 
     def add_rule(self, rule):
         """ Add new rules to the end of the FSM 's rule list """
@@ -76,8 +88,9 @@ class FSM:
     def loop(self):
 
         self.make_rules()
-
         self.agent = KPC()
+        self.agent.keypad = Keypad()
+        self.agent.keypad.setup()
         self.state = 'S-INIT'
 
         while self.state is not None:
@@ -89,10 +102,23 @@ class FSM:
 
 
 def all_signals(*_):
-    """ Check if it si a signal"""
+    """ Check if it is a signal"""
+    return True
+
+
+def led_symbols(*_):
     return True
 
 
 def all_digits(signal):
     """ Check if it is digits """
     return 48 <= ord(signal) <= 57
+
+
+def active(state):
+    return state in ('S-ACTIVE', 'S-ACTIVE-2')
+
+
+if __name__ == '__main__':
+    fsm = FSM()
+    fsm.loop()

@@ -7,6 +7,26 @@ GPIO = GPIOSimulator()
 class Keypad:
     """ Class for the keypad """
 
+    def __init__(self):
+        self.rows = keypad_row_pins
+        self.cols = keypad_col_pins
+
+        self.key_symbols = {
+            (self.rows[0], self.cols[0]): '1',
+            (self.rows[0], self.cols[1]): '2',
+            (self.rows[0], self.cols[2]): '3',
+            (self.rows[1], self.cols[0]): '4',
+            (self.rows[1], self.cols[1]): '5',
+            (self.rows[1], self.cols[2]): '6',
+            (self.rows[2], self.cols[0]): '7',
+            (self.rows[2], self.cols[1]): '8',
+            (self.rows[2], self.cols[2]): '9',
+            (self.rows[3], self.cols[0]): '*',
+            (self.rows[3], self.cols[1]): '0',
+            (self.rows[3], self.cols[2]): '#',
+            None: 'No signal'
+        }
+
     def setup(self):
         """ initialize the row pins as outputs and the column pins as inputs """
         GPIO.setup(PIN_KEYPAD_ROW_0, GPIO.OUT)
@@ -45,8 +65,11 @@ class Keypad:
             GPIO.output(keypad_row_pins[row], GPIO.LOW)
 
         duration = time.time() - start_time
+        if pressed_key_row is not None and pressed_key_col is not None:
+            key = self.key_symbols[pressed_key_row, pressed_key_col]
+            return key, duration
+        return None, None
 
-        return pressed_key_row, pressed_key_col, duration
 
     def get_next_signal(self):
         """ This is the main interface between the agent and the keypad. It should initiate
@@ -58,7 +81,7 @@ class Keypad:
             signal = self.do_polling()
 
             # Key has to be pushed for longer than 0.5 seconds
-            if None not in signal and signal[2] > 0.5:
+            if None not in signal and signal[1] > 0.5:
                 print(signal)
                 return signal
             time.sleep(0.2)

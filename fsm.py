@@ -116,7 +116,7 @@ def all_signals(*_):
 
 
 def led_symbols(signal):
-    return 48 <= ord(signal) < 48 + 5
+    return 48 <= ord(signal) < 48 + 6
 
 
 def all_digits(signal):

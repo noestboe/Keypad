@@ -38,9 +38,7 @@ def test_keypad():
     keypad.get_next_signal()
 
 
-
 if __name__ == '__main__':
-    """ Testing method """
     # print("hei")
     # test_match()
     # test_fire()

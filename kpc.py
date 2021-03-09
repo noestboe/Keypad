@@ -54,7 +54,7 @@ class KPC:
         """ Clear the passcode-buffer and initiate a 'power up' lighting sequence on the LED
          Board. """
         self.input_password = ""
-        self.led_board.flash_all_leds(0.2)
+        self.led_board.flash_all_leds(1)
 
     def change_passcode_entry(self, *_):
         # print("signal", self.get_next_signal())
@@ -75,9 +75,16 @@ class KPC:
         print(self.input_password)
         password_is_equal = self.actual_password == self.input_password
         if password_is_equal:
+            self.led_board.twinkle_all_leds(0.5)
+            self.led_board.twinkle_all_leds(0.5)
             print('password verified')
             self.override_signal = 'Y'
         else:
+            self.led_board.twinkle_all_leds(0.2)
+            self.led_board.twinkle_all_leds(0.2)
+            self.led_board.twinkle_all_leds(0.2)
+            self.led_board.twinkle_all_leds(0.2)
+            self.led_board.twinkle_all_leds(0.2)
             print('password is not verified')
             self.override_signal = None
         self.input_password = ""
@@ -142,13 +149,14 @@ class KPC:
         """ Will append the duration digit to the time """
         self.duration += digit
         print("Appended number: ", digit)
+        print("Current number: ", self.duration)
 
     # 12
     def light_one_led(self, *_):
         """ Using values stored in the Lid and Ldur slots,
         call the LED Board and request that LED
         Lid be turned on for Ldur seconds """
-        self.led_board.light_nth_led(self.led_pin, int(self.duration))
+        self.led_board.light_nth_led(int(self.led_pin), int(self.duration))
 
     # Actions for logout
 
@@ -160,6 +168,12 @@ class KPC:
     # A14
     def confirm_logout(self, *_):
         """" Confirms the logout """
+        self.led_board.light_nth_led(0, 0.5)
+        self.led_board.light_nth_led(1, 0.5)
+        self.led_board.light_nth_led(2, 0.5)
+        self.led_board.light_nth_led(3, 0.5)
+        self.led_board.light_nth_led(4, 0.5)
+        self.led_board.light_nth_led(5, 0.5)
         print("Logout of system")
 
 

@@ -111,26 +111,30 @@ class GPIOSimulator:
         # if there is at least a True in the key states
         if True in self.__key_states:
             # find the first True
-            pressed_key_index = self.__key_states.index(True)
+            try:
+                pressed_key_index = self.__key_states.index(True)
 
-            # retrieve the coordinates of the pressed
-            pressed_row, pressed_col = list(self.__key_coord.values())[pressed_key_index]
+                # retrieve the coordinates of the pressed
+                pressed_row, pressed_col = list(self.__key_coord.values())[pressed_key_index]
 
-            # get the corresponding pins
-            row_pin = pressed_row + PIN_KEYPAD_ROW_0
-            col_pin = pressed_col + PIN_KEYPAD_COL_0
+                # get the corresponding pins
+                row_pin = pressed_row + PIN_KEYPAD_ROW_0
+                col_pin = pressed_col + PIN_KEYPAD_COL_0
 
-            # set the input pin state to True according to the connected lines
-            # it could be row_pin IN and col_pin OUT
-            # or row_pin OUT and col_pin IN
-            if self.__pin_modes[row_pin] == self.OUT and \
-                    self.__pin_states[row_pin] == self.HIGH and \
-                    self.__pin_modes[col_pin] == self.IN:
-                self.__pin_states[col_pin] = self.HIGH
-            elif self.__pin_modes[col_pin] == self.OUT and \
-                    self.__pin_states[col_pin] == self.HIGH and \
-                    self.__pin_modes[row_pin] == self.IN:
-                self.__pin_states[row_pin] = self.HIGH
+                # set the input pin state to True according to the connected lines
+                # it could be row_pin IN and col_pin OUT
+                # or row_pin OUT and col_pin IN
+                if self.__pin_modes[row_pin] == self.OUT and \
+                        self.__pin_states[row_pin] == self.HIGH and \
+                        self.__pin_modes[col_pin] == self.IN:
+                    self.__pin_states[col_pin] = self.HIGH
+                elif self.__pin_modes[col_pin] == self.OUT and \
+                        self.__pin_states[col_pin] == self.HIGH and \
+                        self.__pin_modes[row_pin] == self.IN:
+                    self.__pin_states[row_pin] = self.HIGH
+
+            except ValueError:
+                print()
 
     def __on_press(self, key):
         """ The callback function for a key pressing event """

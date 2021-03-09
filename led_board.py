@@ -168,4 +168,4 @@ class Led_board:
 
 if __name__ == '__main__':
     led_board = Led_board()
-    led_board.twinkle_all_leds(1)
+    led_board.light_nth_led(1, 2)

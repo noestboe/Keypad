@@ -10,7 +10,7 @@ class Keypad:
     def __init__(self):
         self.rows = keypad_row_pins
         self.cols = keypad_col_pins
-        self.duration = 0
+        self.duration = ""
 
         self.key_symbols = {
             (self.rows[0], self.cols[0]): '1',
@@ -30,6 +30,7 @@ class Keypad:
 
     def setup(self):
         """ initialize the row pins as outputs and the column pins as inputs """
+        print(self.duration)
         GPIO.setup(PIN_KEYPAD_ROW_0, GPIO.OUT)
         GPIO.setup(PIN_KEYPAD_ROW_1, GPIO.OUT)
         GPIO.setup(PIN_KEYPAD_ROW_2, GPIO.OUT)
@@ -73,6 +74,7 @@ class Keypad:
         return None
 
     def set_duration(self, duration):
+        """ Sets duration for led light """
         self.duration = duration
 
     def get_next_signal(self):
@@ -85,7 +87,7 @@ class Keypad:
             signal = self.do_polling()
 
             # Key has to be pushed for longer than 0.5 seconds
-            if signal is not None:
+            if signal is not None and self.duration > 0.5:
                 print(signal)
                 return signal
             time.sleep(0.2)

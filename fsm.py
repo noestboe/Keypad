@@ -7,6 +7,7 @@ from keypad import Keypad
 class Rule:
     """ A rule will have the current state1, the next state state2, the signal and
     the action that will be performed when changing state """
+
     def __init__(self, state1, state2, signal, action):
         self.state1 = state1
         self.state2 = state2
@@ -16,6 +17,7 @@ class Rule:
 
 class FSM:
     """" Class for the FSM """
+
     def __init__(self):
         self.rules = []
         self.state = None
@@ -32,7 +34,7 @@ class FSM:
         self.add_rule(Rule('S-VERIFY', 'S-INIT', all_signals, KPC.reset_agent))
 
         # Rules to change password
-        self.add_rule(Rule('S-ACTIVE', 'S-READ-2', '*', KPC.change_passcode_entry))
+        self.add_rule(Rule(active, 'S-READ-2', '*', KPC.change_passcode_entry))
         self.add_rule(Rule('S-READ-2', 'S-READ-2', all_digits, KPC.append_digit))
         self.add_rule(Rule('S-READ-2', 'S-READ-3', '*', KPC.cache_password))
         self.add_rule(Rule('S-READ-2', 'S-ACTIVE', all_signals, KPC.stop_new_password))
@@ -41,7 +43,7 @@ class FSM:
         self.add_rule(Rule('S-READ-3', 'S-ACTIVE', all_signals, KPC.stop_new_password))
 
         # Rules to manipulate lights
-        self.add_rule(Rule('S-ACTIVE', 'S-LED', led_symbols, KPC.select_led))
+        self.add_rule(Rule(active, 'S-LED', led_symbols, KPC.select_led))
         self.add_rule(Rule('S-LED', 'S-TIME', '*', KPC.reset_duration))
         self.add_rule(Rule('S-TIME', 'S-TIME', all_digits, KPC.append_duration_digit))
         self.add_rule(Rule('S-TIME', 'S-ACTIVE', '*', KPC.light_one_led))
@@ -73,8 +75,12 @@ class FSM:
         is_match = True
         if isfunction(rule.signal):
             is_match &= rule.signal(self.signal)
+            if not is_match:
+                return
         else:
             is_match &= rule.signal == self.signal
+            if not is_match:
+                return
 
         if isfunction(rule.state1):
             is_match = rule.state1(self.state)
@@ -110,8 +116,7 @@ def all_signals(*_):
 
 
 def led_symbols(signal):
-    print("led symbols")
-    return 0 < int(signal) < 5
+    return 48 <= ord(signal) < 48 + 5
 
 
 def all_digits(signal):

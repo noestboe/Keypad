@@ -3,10 +3,11 @@ from fsm import FSM
 from kpc import KPC
 from keypad import Keypad
 
+
 def test_run():
     fsm3 = FSM()
     fsm3.agent = KPC()
-    fsm3.state = 'S-VERIFY'
+    fsm3.state = 'S-ACTIVE'
     fsm3.signal = '3'
     fsm3.make_rules()
     fsm3.run()
@@ -36,11 +37,13 @@ def test_keypad():
     keypad.setup()
     keypad.get_next_signal()
 
+
+
 if __name__ == '__main__':
     """ Testing method """
     # print("hei")
     # test_match()
     # test_fire()
-    # test_run()
-    test_keypad()
+    test_run()
+    # test_keypad()
 

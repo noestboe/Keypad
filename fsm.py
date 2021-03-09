@@ -19,7 +19,7 @@ class FSM:
     def __init__(self):
         self.rules = []
         self.state = None
-        self.agent = None
+        self.agent = KPC()
         self.signal = None
 
     def make_rules(self):
@@ -32,7 +32,7 @@ class FSM:
         self.add_rule(Rule('S-VERIFY', 'S-INIT', all_signals, KPC.reset_agent))
 
         # Rules to change password
-        self.add_rule(Rule(active, 'S-READ-2', '*', KPC.reset_passcode_entry))
+        self.add_rule(Rule('S-ACTIVE', 'S-READ-2', '*', KPC.change_passcode_entry))
         self.add_rule(Rule('S-READ-2', 'S-READ-2', all_digits, KPC.append_digit))
         self.add_rule(Rule('S-READ-2', 'S-READ-3', '*', KPC.cache_password))
         self.add_rule(Rule('S-READ-2', 'S-ACTIVE', all_signals, KPC.stop_new_password))
@@ -88,10 +88,10 @@ class FSM:
     def loop(self):
 
         self.make_rules()
-        self.agent = KPC()
         self.agent.keypad = Keypad()
         self.agent.keypad.setup()
         self.state = 'S-INIT'
+        self.agent.read_password_from_file()
 
         while self.state is not None:
             try:
@@ -112,6 +112,7 @@ def led_symbols(*_):
 
 def all_digits(signal):
     """ Check if it is digits """
+    print(signal)
     return 48 <= ord(signal) <= 57
 
 

@@ -10,6 +10,7 @@ class Keypad:
     def __init__(self):
         self.rows = keypad_row_pins
         self.cols = keypad_col_pins
+        self.duration = 0
 
         self.key_symbols = {
             (self.rows[0], self.cols[0]): '1',
@@ -67,9 +68,12 @@ class Keypad:
         duration = time.time() - start_time
         if pressed_key_row is not None and pressed_key_col is not None:
             key = self.key_symbols[pressed_key_row, pressed_key_col]
-            return key, duration
-        return None, None
+            self.set_duration(duration)
+            return key
+        return None
 
+    def set_duration(self, duration):
+        self.duration = duration
 
     def get_next_signal(self):
         """ This is the main interface between the agent and the keypad. It should initiate
@@ -81,7 +85,7 @@ class Keypad:
             signal = self.do_polling()
 
             # Key has to be pushed for longer than 0.5 seconds
-            if None not in signal and signal[1] > 0.5:
+            if signal is not None:
                 print(signal)
                 return signal
             time.sleep(0.2)

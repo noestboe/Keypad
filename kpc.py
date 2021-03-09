@@ -11,8 +11,8 @@ class KPC:
     """
 
     def __init__(self):
-        self.keypad = None
-        self.led_board = None
+        self.keypad = Keypad().setup()
+        self.led_board = Led_board()
         self.path = "password.txt"
         self.override_signal = None
         self.input_password = None
@@ -31,7 +31,7 @@ class KPC:
         for the next pressed key """
         if self.override_signal is not None:
             result = self.override_signal
-            self.override_signal
+            self.override_signal = None
             return result
         return self.keypad.get_next_signal()
 
@@ -52,6 +52,11 @@ class KPC:
         """ Clear the passcode-buffer and initiate a 'power up' lighting sequence on the LED
          Board. """
         self.input_password = ""
+        self.led_board.flash_all_leds(0.2)
+
+    def change_passcode_entry(self, *_):
+        self.input_password = ""
+        print("change passcode entry")
 
     # A2
     def append_digit(self, digit):
@@ -63,13 +68,15 @@ class KPC:
         """ Check that the password just entered via the keypad matches that in the password file.
         Store the result (Y or N) in the override_signal. Also, this should call the LED Board
         to initiate the appropriate lighting pattern for login success or failure. """
+        print(self.actual_password)
+        print(self.input_password)
         password_is_equal = self.actual_password == self.input_password
         if password_is_equal:
             print('password verified')
             self.override_signal = 'Y'
         else:
             print('password is not verified')
-            self.override_signal = 'N'
+            self.override_signal = None
         self.input_password = ""
         return self.override_signal
 
@@ -85,24 +92,33 @@ class KPC:
         print("activated")
 
     # A6
-    def stop_new_password(self):
+    def stop_new_password(self, *_):
         """ This is called when a symbol is not a number in the new password """
         print('Stopping the password entry because it is not a number')
         self.input_password = ""
 
     # A7
-    def cache_password(self):
+    def cache_password(self, *_):
         """ this is called when the user is done with the input of the password for the
         for the first time"""
         self.cache = self.input_password
         self.input_password = ""
 
     # A8
-    def validate_passcode_change(self):
+    def validate_passcode_change(self, *_):
         """" Check that the new password is legal. If so, write the new password in the password file.
         A legal password should be at least 4 digits long and should contain no symbols other than the
         digits 0-9. As in verify_login, this should use the LED Board to signal success or failure in
         changing the password. """
+        if self.cache == self.input_password:
+            if not len(self.cache) < 4:
+                file = open(self.path, "w")
+                print(file, ",", self.path)
+                file.write(self.cache)
+                self.actual_password = self.cache
+                file.close()
+            else:
+                print("failed validate_passcode_change")
 
     # Actions for the LED
 
@@ -145,4 +161,3 @@ if __name__ == '__main__':
     kpc1 = KPC()
     kpc1.keypad = Keypad()
     kpc1.keypad.setup()
-    print(kpc1.get_next_signal())
